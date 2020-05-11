@@ -7,7 +7,6 @@ import math
 deck_p1 = []
 deck_p2 = []
 
-n = int(input())  # the number of cards for player 1
 
 def convert_faces(card):
     if card == "A":
@@ -21,6 +20,8 @@ def convert_faces(card):
     else:
         return card
 
+
+n = int(input())  # the number of cards for player 1
 for i in range(n):
     cardp_1 = input()[:-1]  # the n cards of player 1
     cardp_1 = convert_faces(cardp_1)
@@ -28,51 +29,87 @@ for i in range(n):
 m = int(input())  # the number of cards for player 2
 for i in range(m):
     cardp_2 = input()[:-1]  # the m cards of player 2
-    cardp_2 =  convert_faces(cardp_2)
+    cardp_2 = convert_faces(cardp_2)
     deck_p2.append(cardp_2)
+
+turn = 1
+
+war_deck_p1 = []
+war_deck_p2 = []
+
+
+def battle():
+    if int(deck_p1[0]) > int(deck_p2[0]):
+        war_deck_p1.append(deck_p1.pop(0))
+        war_deck_p2.append(deck_p2.pop(0))
+        return 1
+
+    elif int(deck_p1[0]) < int(deck_p2[0]):
+        war_deck_p1.append(deck_p1.pop(0))
+        war_deck_p2.append(deck_p2.pop(0))
+        return 2
+
+    elif int(deck_p1[0]) == int(deck_p2[0]):
+        war_deck_p1.append(deck_p1.pop(0))
+        war_deck_p1.append(deck_p1.pop(0))
+        war_deck_p1.append(deck_p1.pop(0))
+        war_deck_p1.append(deck_p1.pop(0))
+        war_deck_p2.append(deck_p2.pop(0))
+        war_deck_p2.append(deck_p2.pop(0))
+        war_deck_p2.append(deck_p2.pop(0))
+        war_deck_p2.append(deck_p2.pop(0))
+        return 3
 
 print(deck_p1, file=sys.stderr)
 print(deck_p2, file=sys.stderr)
 
-turn = 1
-
-war_deck = []
-
-def battle():
-    if deck_1[-1] > deck_2[-1]:
-        deck_1.insert(0, deck_1.pop(-1))
-        deck_1.insert(0, deck_2.pop(-1))
-        return 1
-    
-    elif deck_1[-1] < deck_2[-1]:
-        deck_2.insert(0, deck_1.pop(-1))
-        deck_2.insert(0, deck_1.pop(-1))
-        return 2
-
-    elif deck_1[-1] == deck_2[-1]:
-        war_deck.append(deck_p1.pop(-1))
-        war_deck.append(deck_p1.pop(-1))
-        war_deck.append(deck_p1.pop(-1))
-        war_deck.append(deck_p1.pop(-1))
-        war_deck.append(deck_p2.pop(-1))
-        war_deck.append(deck_p2.pop(-1))
-        war_deck.append(deck_p2.pop(-1))
-        war_deck.append(deck_p2.pop(-1))
-        return 3
-
+previous_result = 1
 while True:
-    print(f"turn {turn}", file=sys.stderr)
-    print(f"p1 card {deck_p1[-1]}", file=sys.stderr)
-    print(f"p2 card {deck_p2[-1]}", file=sys.stderr)
-
-    battle()
-
     if len(deck_p1) == 0 or len(deck_p2) == 0:
         break
-
-    print(f"deck_p1 {len(deck_p1)} deck_p2 {len(deck_p2)}", file=sys.stderr)    
+    result = battle()
+    if len(deck_p1) == 0 or len(deck_p2) == 0:
+        break
+    if previous_result == 3:
+        if result == 1:
+            for c in war_deck_p1:
+                deck_p1.append(c)
+            for c in war_deck_p2:
+                deck_p1.append(c)
+            previous_result = 1
+        elif result == 2:
+            for c in war_deck_p1:
+                deck_p2.append(c)
+            for c in war_deck_p2:
+                deck_p2.append(c)
+            previous_result = 2
+        elif result == 3:
+            previous_result = 3
+    else:
+        if result == 1:
+            for c in war_deck_p1:
+                deck_p1.append(c)
+            for c in war_deck_p2:
+                deck_p1.append(c)
+            if len(deck_p1) == 0 or len(deck_p2) == 0:
+                break
+            turn += 1
+            previous_result = 1
+        elif result == 2:
+            for c in war_deck_p1:
+                deck_p2.append(c)
+            for c in war_deck_p2:
+                deck_p2.append(c)
+            if len(deck_p1) == 0 or len(deck_p2) == 0:
+                break
+            turn += 1
+            previous_result = 2
+        elif result == 3:
+            previous_result = 3
     
-    turn += 1
+    print(deck_p1, file=sys.stderr)
+    print(deck_p2, file=sys.stderr)
+    print(turn, file=sys.stderr)
 
 if deck_p1 > deck_p2:
     winner = 1
