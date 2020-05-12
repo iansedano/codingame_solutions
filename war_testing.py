@@ -1,35 +1,11 @@
 import sys
-import math
 
-deck_p1 = []
-deck_p2 = []
-
-
-def convert_faces(card):
-    if card == "A":
-        return 14
-    elif card == "K":
-        return 13
-    elif card == "Q":
-        return 12
-    elif card == "J":
-        return 11
-    else:
-        return card
-
-
-n = int(input())  # the number of cards for player 1
-for i in range(n):
-    cardp_1 = input()[:-1]  # the n cards of player 1
-    cardp_1 = convert_faces(cardp_1)
-    deck_p1.append(int(cardp_1))
-m = int(input())  # the number of cards for player 2
-for i in range(m):
-    cardp_2 = input()[:-1]  # the m cards of player 2
-    cardp_2 = convert_faces(cardp_2)
-    deck_p2.append(int(cardp_2))
+deck_p1 = [5, 8, 10, 9, 4, 6, 12, 6, 6, 9, 2, 7, 14, 5, 7, 9, 12, 4, 3, 11, 2, 13, 10, 12, 3, 8]
+deck_p2 = [4, 11, 8, 10, 5, 7, 3, 14, 13, 10, 11, 6, 2, 13, 8, 9, 13, 3, 14, 11, 4, 7, 2, 12, 5, 14]
 
 turn = 1
+print(f"starting deck 1 {deck_p1}", file=sys.stderr)
+print(f"starting deck 2 {deck_p2}", file=sys.stderr)
 war_deck_p1 = []
 war_deck_p2 = []
 
@@ -60,12 +36,17 @@ def battle():
         except:
             return "PAT"
 
-
 winner = 0
 previous_result = 1
 while True:
     # Start of turn
+    print(f"turn {turn}", file=sys.stderr)
     result = battle()
+    print(f"///// result {result}", file=sys.stderr)
+    print(f"b deck 1 {deck_p1}", file=sys.stderr)
+    print(f"b deck 2 {deck_p2}", file=sys.stderr)
+    print(f"b w deck 1 {war_deck_p1}", file=sys.stderr)
+    print(f"b w deck 2 {war_deck_p2}", file=sys.stderr)
     # if in a War
     if previous_result == 3:
         if result == 1:
@@ -127,6 +108,15 @@ while True:
     elif result == "PAT":
         winner = "PAT"
         break
+    
+    print(f"deck 1 {deck_p1}", file=sys.stderr)
+    print(f"deck 2 {deck_p2}", file=sys.stderr)
+    print(f"w deck 1 {war_deck_p1}", file=sys.stderr)
+    print(f"w deck 2 {war_deck_p2}", file=sys.stderr)
+    
+
+print(f"deck 1 {deck_p1}", file=sys.stderr)
+print(f"deck 2 {deck_p2}", file=sys.stderr)
 
 if winner == "PAT":
     message = winner
