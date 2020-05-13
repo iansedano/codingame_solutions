@@ -5,33 +5,9 @@ import math
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
-# n: the total number of nodes in the level, including the gateways
-# l: the number of links
-# e: the number of exit gateways
-n, l, e = [int(i) for i in input().split()]
-
-nodes = []
-for i in range(n):
-    nodes.append(i)
-
-print(f"nodes {nodes}", file=sys.stderr)
-
-links = []
-for i in range(l):
-    # n1: N1 and N2 defines a link between these nodes
-    n1, n2 = [int(j) for j in input().split()]
-    links.append([n1, n2])
-
-print(f"links {links}", file=sys.stderr)
-
-gateways = []
-for i in range(e):
-    ei = int(input())  # the index of a gateway node
-    gateways.append(ei)
-
-print(f"gateways {gateways}", file=sys.stderr)
-
+nodes = [0, 1, 2, 3, 4, 5, 6, 7]
+links = [[6, 2], [7, 3], [6, 3], [5, 3], [3, 4], [7, 1], [2, 0], [0, 1], [0, 3], [1, 3], [2, 3], [7, 4], [6, 5]]
+gateways = [4, 5]
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -158,8 +134,8 @@ def find_link_to_cut(gateway, node):
         if l[0] == gateway and l[1] == node:
             link_to_cut = [l[0], l[1]]
             return link_to_cut
-        elif l[0] == node and l[1] == gateway:
-            link_to_cut = [l[0], l[1]]
+        elif l[1] == node and l[0] == gateway:
+            link_to_cut = [l[1], l[0]]
             return link_to_cut
         
     return 0 # if can't find it
@@ -172,31 +148,26 @@ nodes_next_to_gates_dict = make_nodes_next_to_gates_dict()
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # game loop
-while True:
-    si = int(input())  # The index of the node on which the Skynet agent is positioned this turn
-    print(f"si {si}", file=sys.stderr)
 
-    critical_links = build_critical_links()
-    nodes_next_to_gates_dict = make_nodes_next_to_gates_dict()
+si = 0  # The index of the node on which the Skynet agent is positioned this turn
+print(f"si {si}", file=sys.stderr)
 
-    link_to_cut = ''
+link_to_cut = ''
 
-    gateway_dict = {i: 999 for i in gateways}
-    for g in gateways:
-        gateway_dict[g] = dijkstra(g, si, nodes, links)
+gateway_dict = {i: 999 for i in gateways}
+for g in gateways:
+    gateway_dict[g] = dijkstra(g, si, nodes, links)
 
-    print(f"gateway_dict {gateway_dict}", file=sys.stderr)
+most_important_node = max(nodes_next_to_gates_dict, key=nodes_next_to_gates_dict.get)
+most_important_gateway = max(gateway_dict, key=gateway_dict.get)
+print(f"most_important_node {most_important_node}", file=sys.stderr)
+print(f"most_important_gateway {most_important_gateway}", file=sys.stderr)
 
-    most_important_node = max(nodes_next_to_gates_dict, key=nodes_next_to_gates_dict.get)
-    most_important_gateway = min(gateway_dict, key=gateway_dict.get)
-    print(f"most_important_node {most_important_node}", file=sys.stderr)
-    print(f"most_important_gateway {most_important_gateway}", file=sys.stderr)
+link_to_cut = find_link_to_cut(most_important_gateway, most_important_node)
 
-    link_to_cut = find_link_to_cut(most_important_gateway, most_important_node)
+print(f"link_to_cut {link_to_cut}", file=sys.stderr)
 
-    print(f"link_to_cut {link_to_cut}", file=sys.stderr)
 
-    links.remove(link_to_cut)
-    
-    # Example: 0 1 are the indices of the links you wish to sever the link between
-    print(f"{link_to_cut[0]} {link_to_cut[1]}")
+# Example: 0 1 are the indices of the links you wish to sever the link between
+print(f"{link_to_cut[0]} {link_to_cut[1]}")
+
