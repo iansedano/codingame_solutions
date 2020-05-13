@@ -27,35 +27,39 @@ for i in range(e):
 
 print(f"gateways {gateways}", file=sys.stderr)
 
-critical_links=[]
+critical_links = []
 for g in gateways:
     for n in links:
         if n[0] == int(g) or n[1] == int(g):
-            critical_links.append(n)
+            critical_links.append(n)s
 
 print(f"critical links {critical_links}", file=sys.stderr)
+
+
+
+
 
 # game loop
 while True:
     si = int(input())  # The index of the node on which the Skynet agent is positioned this turn
     print(f"si {si}", file=sys.stderr)
 
-    node_to_cut = ''
+    link_to_cut = ''
 
-    for cn in critical_nodes:
-        if links[cn][1] == si or links[cn][2] == si:
-            node_to_cut = links[cn]
-            critical_nodes.remove(cn)
+    for cn in critical_links:
+        if cn[0] == si or cn[1] == si:
+            link_to_cut = cn
+            critical_links.remove(cn)
 
 
-    for cn in critical_nodes:
-        if node_to_cut == '':
-            node_to_cut = links[critical_nodes[0]]
-            critical_nodes.pop(0)
+    for cn in critical_links:
+        if link_to_cut == '':
+            link_to_cut = critical_links[0]
+            critical_links.pop(0)
 
     # Write an action using print
     # To debug: print("Debug messages...", file=sys.stderr)
 
 
     # Example: 0 1 are the indices of the links you wish to sever the link between
-    print(f"{node_to_cut[1]} {node_to_cut[2]}")
+    print(f"{link_to_cut[0]} {link_to_cut[1]}")
